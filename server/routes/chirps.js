@@ -1,29 +1,33 @@
 const express = require('express');
-const chirpstore = require('./chirpstore');
-let router = express.Router();
+const chirpStore = require('../../chirpstore');
+const router = express.Router();
 
 router.get('/:id?', (req, res) => {
-    let id = req.params.id
+    const id = req.params.id;
+
     if (id) {
-        res.json(chirpstore.GetChirp(id));
-    }else{
-        res.send(chirpstore.GetChirps);
+        res.send(chirpStore.GetChirp(id));
+    } else {
+        res.sendStatus(chirpStore.GetChirps());
     }
 });
+
 router.post('/', (req, res) => {
-    chirpstore.CreateChirp(req.body);
-        res.status(200).send("entrycreated");
-});
+    const chirp = req.body
+
+    res.send(chirpStore.CreateChirp(req.body))
+})
+
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const chirp = req.body
+
+    res.send(chirpStore.UpdateChirp(id, chirp));
+})
 
 router.delete('/:id', (req, res) => {
-    chirpstore.DeleteChirp(req.params.id);
-    
-});
-
-router.put('/', (req, res) => {
-    chirpstore.createChirp(req.params.id, req.body)
-    res.send(chirpstore.CreateChirp)
-});
+    res.send(chirpStore.DeleteChirp(id))
+})
 
 
 module.exports = router;
